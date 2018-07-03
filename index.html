@@ -1,42 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>BeadNet</title>
-  <link rel="stylesheet" href="./docs/styles/jsdoc-default.css">
+    <title>BeadNet demo for Puzzle ITC</title>
+    <link rel="stylesheet" href="./docs/styles/jsdoc-default.css">
+    <meta charset="utf-8">
+    <style>
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        p {
+            margin-left: 20px;
+        }
+
+        #beadnet {
+            border: 3px solid gray;
+            box-sizing: border-box;
+            position: absolute;
+            top: 20%;
+            left: 0;
+            bottom: 0;
+            right: 25%;
+        }
+
+        #controls {
+            position: absolute;
+            background-color: lightgray;
+            top: 20%;
+            left: 75%;
+            bottom: 0;
+            right: 0;
+            padding: 1em;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+    <script src="dist/beadnet.standalone.min.js"></script>
 </head>
 <body>
-<h1 id="beadnet-alpha-preview-">BeadNet (Alpha Preview)</h1>
-<p>A visualisation library for peer-to-peer payment channel networks.</p>
-<p><em>This software is in a very eary stage of development! Even basic functionallity is still broken and brakeing changes may occure at eny time.</em></p>
-<p><img src="./beadnet.gif" alt="basic beadnet chart"></p>
-<h2 id="documenatation">Documenatation</h2>
-<ul>
-<li><a href="./docs/">JSDocs</a></li>
-</ul>
-<h2 id="examples">Examples</h2>
-<h3 id="basic-examples">Basic Examples</h3>
-<ul>
-<li><a href="./examples/basic/nodes.html">Adding and Removing Nodes</a></li>
-<li><a href="./examples/basic/channels.html">Adding and Removing Channels</a></li>
-<li><a href="./examples/basic/beads.html">Creating and moving Beads</a></li>
-</ul>
-<h3 id="simulations">Simulations</h3>
-<ul>
-<li><a href="./examples/simulations/channels.html">Auto Adding and Removing Channels</a></li>
-<li><a href="./examples/simulations/presentation.html">Presentation mode</a></li>
-<li><a href="./examples/simulations/emulator.html">Interactive emulator</a></li>
-</ul>
-<h2 id="support">Support</h2>
-<p>💕 Every little donation lights up my day!</p>
-<ul>
-<li><strong>BTC ⚡</strong>:    <a href="https://1ml.com/node/02ab16f790c7727eac2048771cbe95cbcc1aa93931558c0fd87c06d5c389475a7b">02ab16f790c7727eac2048771cbe95cbcc1aa93931558c0fd87c06d5c389475a7b@159.89.97.171:9735</a></li>
-<li><strong>BTC</strong>:    <a href="https://blockchain.info/de/address/34dmeTmeWLPLudJ6gqXBQycd1aXbbQR6Aq">34dmeTmeWLPLudJ6gqXBQycd1aXbbQR6Aq</a></li>
-<li><strong>Fiat</strong>: <a href="https://www.paypal.me/mojoaxel">paypal.me/mojoaxel</a></li>
-</ul>
-<h2 id="license">License</h2>
-<p>Copyright (C) 2018 <a href="//github.com/mojoaxel">Alexander Wunschik</a></p>
-<p><strong>This program is free software</strong>: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
-<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>
-<p>You should have received a copy of the GNU Affero General Public License <a href="LICENSE">along with this program</a>.</p>
+<h1 id="beadnet-alpha-preview-">BeadNet demo for Puzzle ITC</h1>
+<p>
+    A visualisation of how Lightning Network salary payments could work at Puzzle ITC.<br/>
+    This demo is based on the <a href="https://github.com/mojoaxel/beadnet">BeadNet library</a> of
+    <a href="//github.com/mojoaxel">Alexander Wunschik</a>.
+</p>
+
+<div id="container">
+    <div id="beadnet"></div>
+    <div id="controls">
+        <fieldset id="add-node">
+            <legend>presentation</legend>
+            <button id="nextStep">Next Step</button>
+        </fieldset>
+    </div>
+
+    <script>
+        window.onload = function () {
+
+            var colors = d3.scaleOrdinal(d3.schemeCategory10);
+
+            // initialize BeadNet
+            window.bn = new beadnet({
+                colorScheme: colors,
+                presentation: {
+                    steps: [
+                        [
+                            {
+                                cmd: 'ADD_NODES', args: [[
+                                    { id: 'Oli', balance: 10 },
+                                    { id: 'Thömu', balance: 10 },
+                                    { id: 'Sarah', balance: 10 },
+                                    { id: 'Robin', balance: 10 },
+                                    { id: 'Ädu', balance: 10 },
+                                    { id: 'Adrian', balance: 10 },
+                                    { id: 'Dänu', balance: 10 },
+                                    { id: 'Ändu', balance: 10 },
+                                    { id: 'PuzzleITC', balance: 100 },
+                                    { id: 'Digitec', balance: 0 },
+                                ]]
+                            },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Oli', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Thömu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Sarah', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Robin', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Ädu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Adrian', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Dänu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Ändu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'PuzzleITC', sourceBalance: 10, target: 'Digitec', targetBalance: 0 }] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Oli', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['Thömu', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['Sarah', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['Robin', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['Ädu', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 5, null] },
+                        ]
+                    ]
+                }
+            });
+            bn.nextStep();
+
+            var btnNextStep = document.querySelector('button#nextStep');
+            btnNextStep.addEventListener('click', function () {
+                bn.nextStep();
+            });
+
+        };
+    </script>
+</div>
+
 </body>
 </html>
