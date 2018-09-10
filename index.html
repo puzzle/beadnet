@@ -46,6 +46,13 @@
     This demo is based on the <a href="https://github.com/mojoaxel/beadnet">BeadNet library</a> of
     <a href="//github.com/mojoaxel">Alexander Wunschik</a>.
 </p>
+<br/><br/><br/>
+<h4>Todo:</h4>
+<ul>
+    <li>Allow emulator control as well as simulation</li>
+    <li>Optimize channel draw length, node placement. Maybe give some nodes a flag that they're routing nodes.</li>
+    <li>Text description of every step</li>
+</ul>
 
 <div id="container">
     <div id="beadnet"></div>
@@ -67,37 +74,60 @@
                 presentation: {
                     steps: [
                         [
+                            { cmd: 'ADD_NODES', args: [[{ id: 'PuzzleITC', balance: 10 }, { id: 'Digitec', balance: '0' },]] },
+                        ],
+                        [
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'PuzzleITC', sourceBalance: 10, target: 'Digitec', targetBalance: 0 }] },
+                        ],
+                        [
                             {
                                 cmd: 'ADD_NODES', args: [[
                                     { id: 'Oli', balance: 10 },
                                     { id: 'Thömu', balance: 10 },
                                     { id: 'Sarah', balance: 10 },
-                                    { id: 'Robin', balance: 10 },
-                                    { id: 'Ädu', balance: 10 },
-                                    { id: 'Adrian', balance: 10 },
-                                    { id: 'Dänu', balance: 10 },
-                                    { id: 'Ändu', balance: 10 },
-                                    { id: 'PuzzleITC', balance: 100 },
-                                    { id: 'Digitec', balance: 0 },
+                                    { id: 'Gäbu', balance: 10 },
+                                    { id: 'Sombra', balance: 10 },
                                 ]]
                             },
+                        ],
+                        [
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Oli', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Thömu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Sarah', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
-                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Robin', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
-                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Ädu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
-                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Adrian', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
-                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Dänu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
-                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Ändu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
-                            { cmd: 'ADD_CHANNEL', args: [{ source: 'PuzzleITC', sourceBalance: 10, target: 'Digitec', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Gäbu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Sombra', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
                         ],
                         [
                             { cmd: 'MOVE_BEADS', args: ['Oli', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 1, null] },
+                        ],
+                        [
                             { cmd: 'MOVE_BEADS', args: ['Thömu', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 1, null] },
+                        ],
+                        [
                             { cmd: 'MOVE_BEADS', args: ['Sarah', 'PuzzleITC', 1, null] },
-                            { cmd: 'MOVE_BEADS', args: ['Robin', 'PuzzleITC', 1, null] },
-                            { cmd: 'MOVE_BEADS', args: ['Ädu', 'PuzzleITC', 1, null] },
-                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 5, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 1, null] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Gäbu', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['Sombra', 'PuzzleITC', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 2, null] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Oli', 'PuzzleITC', 4, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 4, null] },
+                        ],
+                        [
+                            { cmd: 'ADD_NODES', args: [[{ id: 'Lohn', balance: 7 },]] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Lohn', sourceBalance: 7, target: 'PuzzleITC', targetBalance: 0 }] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Lohn', 'PuzzleITC', 7, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Oli', 4, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Sarah', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Thömu', 1, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Gäbu', 1, null] },
                         ]
                     ]
                 }

@@ -1,4 +1,4 @@
-import extend from "extend";
+import extend from 'extend';
 
 const defaultOptions = {
 
@@ -7,26 +7,26 @@ const defaultOptions = {
 	debug: false,
 
 	container: {
-		selector: "#beadnet",
-		backgroundColor: "#FFF"
+		selector: '#beadnet',
+		backgroundColor: '#FFF'
 	},
 
 	nodes: {
-		radius: 30,
+		radius: 35,
 		color: null,
 		strokeWidth: 3,
 		strokeColor: null,
 
 		/* ["id", "balance"] */
-		text: "id"
+		text: 'id'
 	},
 
 	channels: {
-		color: "gray",
+		color: '#ccc',
 		colorHighlighted: null,
 
 		/* Number or "auto" */
-		strokeWidth: "auto",
+		strokeWidth: 'auto',
 		strokeColor: null,
 
 		/* show channel balance as text path */
