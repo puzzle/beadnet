@@ -230,10 +230,17 @@ class Beadnet {
 			.style('stroke-width', opt.nodes.strokeWidth);
 
 		nodeParent.append('circle')
+			.attr('class', 'node-circle')
+			.attr('fill', (data) => data.color)
+			.attr('r', opt.nodes.radius)
+			.style('stroke-width', 0)
+			.style('cursor', 'pointer');
+
+		nodeParent.append('circle')
 			.attr('class', 'node-circle-onchain')
 			.attr('fill', '#666')
 			.attr('r', opt.nodes.radius * 0.4)
-			.attr('cx', '30px')
+			.attr('cx', '-15px')
 			.attr('cy', '-30px')
 			.style('stroke-width', 0)
 			.style('cursor', 'pointer');
@@ -247,16 +254,9 @@ class Beadnet {
 			.attr('font-size', '12px')
 			.attr('text-anchor', 'middle')
 			.attr('pointer-events', 'none')
-			.attr('x', '30px')
-			.attr('y', '-30px')
+			.attr('x', '-15px')
+			.attr('y', '-26px')
 			.text((d) => '\u0e3f ' + d.balance);
-
-		nodeParent.append('circle')
-			.attr('class', 'node-circle')
-			.attr('fill', (data) => data.color)
-			.attr('r', opt.nodes.radius)
-			.style('stroke-width', 0)
-			.style('cursor', 'pointer');
 
 		nodeParent.append('text')
 			.style('stroke-width', 0.5)
@@ -277,7 +277,7 @@ class Beadnet {
 			.attr('fill', opt.container.backgroundColor)
 			.attr('font-family', 'sans-serif')
 			.attr('font-size', '12px')
-			.attr('y', '15px')
+			.attr('y', '20px')
 			.attr('text-anchor', 'middle')
 			.attr('pointer-events', 'none')
 			.text((d) => '\u26A1 ' + d.offchainBalance);
@@ -1127,14 +1127,20 @@ class Beadnet {
 	 */
 	nextStep() {
 		if (!this.presentation) {
-			console.log('not in presentation mode! please pass a presentation object when creating the beadnet.');
-			return;
+			const err = 'not in presentation mode! please pass a presentation object when creating the beadnet.';
+			console.log(err);
+			return err;
 		}
 		if (this.presentation.currentState >= this.presentation.steps.length) {
-			console.log('presentation reached its end. please restart it.');
-			return;
+			const err = 'presentation reached its end. please restart it.';
+			console.log(err);
+			return err;
 		}
 		let script = this.presentation.steps[this.presentation.currentState];
+		let description = '';
+		if ((typeof script[0]) === 'string') {
+			description = script.shift();
+		}
 		let bn = this;
 		script.forEach(subStep => {
 			let fnMapping = COMMAND_MAPPING[subStep.cmd];
@@ -1142,6 +1148,7 @@ class Beadnet {
 			fn.apply(bn, subStep.args);
 		});
 		this.presentation.currentState++;
+		return description;
 	}
 }
 

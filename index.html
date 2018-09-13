@@ -8,7 +8,6 @@
         body,
         html {
             width: 100%;
-            height: 100%;
             margin: 0;
         }
 
@@ -20,20 +19,21 @@
             border: 3px solid gray;
             box-sizing: border-box;
             position: absolute;
-            top: 20%;
+            top: 150px;
             left: 0;
             bottom: 0;
-            right: 25%;
+            right: 430px;
+            height: calc(100% - 151px);
         }
 
         #controls {
             position: absolute;
             background-color: lightgray;
-            top: 20%;
-            left: 75%;
+            top: 150px;
+            width: 400px;
             bottom: 0;
             right: 0;
-            padding: 1em;
+            padding: 15px;
         }
 
         @font-face {
@@ -58,15 +58,15 @@
     This demo is based on the <a href="https://github.com/mojoaxel/beadnet">BeadNet library</a> of
     <a href="//github.com/mojoaxel">Alexander Wunschik</a>.
 </p>
+<!--
 <br/><br/><br/>
 <h4>Todo:</h4>
 <ul>
-    <li>Allow emulator control as well as simulation</li>
     <li>Optimize channel draw length, node placement. Maybe give some nodes a flag that they're routing nodes.</li>
-    <li>Text description of every step</li>
     <li>Node info on click</li>
     <li>Moving beads different color</li>
 </ul>
+-->
 
 <div id="container">
     <div id="beadnet"></div>
@@ -74,6 +74,10 @@
         <fieldset id="add-node">
             <legend>presentation</legend>
             <button id="nextStep">Next Step</button>
+        </fieldset>
+        <fieldset id="description">
+            <legend>current step</legend>
+            <div id="description-body"></div>
         </fieldset>
     </div>
 
@@ -88,27 +92,35 @@
                 presentation: {
                     steps: [
                         [
+                            'Puzzle ITC has 10 bitcoins and wants to transact often with Digitec.',
                             { cmd: 'ADD_NODES', args: [[{ id: 'PuzzleITC', balance: 10 }, { id: 'Digitec', balance: '0' },]] },
                         ],
                         [
+                            'To make transactions fast and with small fees, Puzzle opens a Payment Channel with Digitec and puts their 10 bitcoins into the channel.',
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'PuzzleITC', sourceBalance: 10, target: 'Digitec', targetBalance: 0 }] },
                         ],
                         [
+                            'Puzzle now starts buying stuff and pays through the established channel.',
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 2, null] },
                         ],
                         [
+                            'Puzzle buys even more stuff from Digitec. Note, each of these transactions is very fast (milliseconds) and free.',
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 4, null] },
                         ],
                         [
+                            'Digitec really likes this and they become even more interested in the Lightning Network. And they like the idea that they don\'t have to pay large fees to credit card companies anymore. They ask Puzzle to design a prototype of a payment system so they can offer Lightning Network payments to all of their customers. They pay for the prototype through the open channel.',
                             { cmd: 'MOVE_BEADS', args: ['Digitec', 'PuzzleITC', 1, null] },
                         ],
                         [
+                            'Puzzle hires new talent and buys even more hardware from Digitec.',
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 3, null] },
                         ],
                         [
+                            'Digitec now asks Puzzle to roll out their Lightning Network payment solution to all of their customers. They pay through the open channel.',
                             { cmd: 'MOVE_BEADS', args: ['Digitec', 'PuzzleITC', 8, null] },
                         ],
                         [
+                            'Puzzle employees already have some bitcoins because their awesome employer pays part of their salary in bitcoin.',
                             {
                                 cmd: 'ADD_NODES', args: [[
                                     { id: 'Oli', balance: 10 },
@@ -120,6 +132,7 @@
                             },
                         ],
                         [
+                            'The employees open channels with Puzzle\'s node because they know they will be able to spend it through them.',
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Oli', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Thömu', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Sarah', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
@@ -127,27 +140,33 @@
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Sombra', sourceBalance: 5, target: 'PuzzleITC', targetBalance: 0 }] },
                         ],
                         [
+                            'Oli buys from Digitec.',
                             { cmd: 'MOVE_BEADS', args: ['Oli', 'PuzzleITC', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 1, null] },
                         ],
                         [
+                            'Thömu buys from Digitec.',
                             { cmd: 'MOVE_BEADS', args: ['Thömu', 'PuzzleITC', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 1, null] },
                         ],
                         [
+                            'A lot of transactions are happening, almost at the same time.',
                             { cmd: 'MOVE_BEADS', args: ['Gäbu', 'PuzzleITC', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['Sombra', 'PuzzleITC', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 2, null] },
                         ],
                         [
+                            'Oli buys even more from Digitec. He really likes the shop :-)',
                             { cmd: 'MOVE_BEADS', args: ['Oli', 'PuzzleITC', 4, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 4, null] },
                         ],
                         [
+                            'Now Oli spent all his Lightning Network balance and can\'t use the channel any more. Luckily it\'s end of the month and Puzzle now also pays a part of the salary over the Lightning Network.',
                             { cmd: 'ADD_NODES', args: [[{ id: 'Lohn', balance: 6 },]] },
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Lohn', sourceBalance: 6, target: 'PuzzleITC', targetBalance: 0 }] },
                         ],
                         [
+                            'Puzzle pays out the salaries, replenishing the balance on the employee\'s channels.',
                             { cmd: 'MOVE_BEADS', args: ['Lohn', 'PuzzleITC', 6, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Oli', 3, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Sarah', 1, null] },
@@ -155,32 +174,38 @@
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Gäbu', 1, null] },
                         ],
                         [
+                            'Oli buys more stuff from Digitec. What the heck is he building? Who needs that much hardware?',
                             { cmd: 'MOVE_BEADS', args: ['Oli', 'PuzzleITC', 2, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 2, null] },
                         ],
                         [
+                            'Oli doesn\'t like closing channels just because their spending capacity is reached. So he opens a new channel with Gäbu to show another cool possibility of the Lightning Network.',
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'Oli', sourceBalance: 5, target: 'Gäbu', targetBalance: 0 }] },
                         ],
                         [
+                            'Using the new channel, Oli pays himself, effectively moving balance from one channel to another. How cool is that?',
                             { cmd: 'MOVE_BEADS', args: ['Oli', 'Gäbu', 3, null] },
                             { cmd: 'MOVE_BEADS', args: ['Gäbu', 'PuzzleITC', 3, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Oli', 3, null] },
                         ],
                         [
+                            'Gäbu soon goes to another country for a long holiday. Unfortunately they don\'t have many vendors that use the Lightning Network yet, so he closes all his channels. He now moves all his 10 bitcoins back on-chain (3 + 2 + 5) and can store them in a paper wallet created with <a href="https://wwww.coinglacier.org" target="_blank">coinglacier.org</a>.',
                             { cmd: 'REMOVE_CHANNEL', args: ['Gäbu', 'PuzzleITC'] },
                             { cmd: 'REMOVE_CHANNEL', args: ['Oli', 'Gäbu'] },
                         ],
                         [
+                            'Gäbu goes offline.',
                             { cmd: 'REMOVE_NODE', args: ['Gäbu'] },
                         ]
                     ]
                 }
             });
-            bn.nextStep();
+            var descBody = document.querySelector('#description-body');
+            descBody.innerHTML = bn.nextStep();
 
             var btnNextStep = document.querySelector('button#nextStep');
             btnNextStep.addEventListener('click', function () {
-                bn.nextStep();
+                descBody.innerHTML = bn.nextStep();
             });
 
         };
