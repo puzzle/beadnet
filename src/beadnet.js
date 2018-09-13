@@ -855,7 +855,7 @@ class Beadnet {
 	 * @param {*} b
 	 * @returns {string} bead position.
 	 */
-	_positionBeat(b, d) {
+	_positionBead(b, d) {
 		const bead = d3.select(b);
 		const index = d.index;
 		const state = +bead.attr('channel-state'); // state 0=source, 1=target
@@ -911,7 +911,7 @@ class Beadnet {
 			return;
 		}
 		this.beadElements.attr('transform', function (d) {
-			return that._positionBeat(this, d);
+			return that._positionBead(this, d);
 		});
 	}
 
