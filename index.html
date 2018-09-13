@@ -94,6 +94,21 @@
                             { cmd: 'ADD_CHANNEL', args: [{ source: 'PuzzleITC', sourceBalance: 10, target: 'Digitec', targetBalance: 0 }] },
                         ],
                         [
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 2, null] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 4, null] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Digitec', 'PuzzleITC', 1, null] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 3, null] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Digitec', 'PuzzleITC', 8, null] },
+                        ],
+                        [
                             {
                                 cmd: 'ADD_NODES', args: [[
                                     { id: 'Oli', balance: 10 },
@@ -120,10 +135,6 @@
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 1, null] },
                         ],
                         [
-                            { cmd: 'MOVE_BEADS', args: ['Sarah', 'PuzzleITC', 1, null] },
-                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 1, null] },
-                        ],
-                        [
                             { cmd: 'MOVE_BEADS', args: ['Gäbu', 'PuzzleITC', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['Sombra', 'PuzzleITC', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 2, null] },
@@ -133,15 +144,34 @@
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 4, null] },
                         ],
                         [
-                            { cmd: 'ADD_NODES', args: [[{ id: 'Lohn', balance: 7 },]] },
-                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Lohn', sourceBalance: 7, target: 'PuzzleITC', targetBalance: 0 }] },
+                            { cmd: 'ADD_NODES', args: [[{ id: 'Lohn', balance: 6 },]] },
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Lohn', sourceBalance: 6, target: 'PuzzleITC', targetBalance: 0 }] },
                         ],
                         [
-                            { cmd: 'MOVE_BEADS', args: ['Lohn', 'PuzzleITC', 7, null] },
-                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Oli', 4, null] },
+                            { cmd: 'MOVE_BEADS', args: ['Lohn', 'PuzzleITC', 6, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Oli', 3, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Sarah', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Thömu', 1, null] },
                             { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Gäbu', 1, null] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Oli', 'PuzzleITC', 2, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Digitec', 2, null] },
+                        ],
+                        [
+                            { cmd: 'ADD_CHANNEL', args: [{ source: 'Oli', sourceBalance: 5, target: 'Gäbu', targetBalance: 0 }] },
+                        ],
+                        [
+                            { cmd: 'MOVE_BEADS', args: ['Oli', 'Gäbu', 3, null] },
+                            { cmd: 'MOVE_BEADS', args: ['Gäbu', 'PuzzleITC', 3, null] },
+                            { cmd: 'MOVE_BEADS', args: ['PuzzleITC', 'Oli', 3, null] },
+                        ],
+                        [
+                            { cmd: 'REMOVE_CHANNEL', args: ['Gäbu', 'PuzzleITC'] },
+                            { cmd: 'REMOVE_CHANNEL', args: ['Oli', 'Gäbu'] },
+                        ],
+                        [
+                            { cmd: 'REMOVE_NODE', args: ['Gäbu'] },
                         ]
                     ]
                 }
