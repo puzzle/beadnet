@@ -129,6 +129,10 @@ const COMMAND_MAPPING = {
 		fnName: 'moveBeads',
 		numArgs: 4
 	},
+	UPDATE_NODE: {
+		fnName: 'updateNode',
+		numArgs: 2
+	}
 };
 
 /**
@@ -308,9 +312,32 @@ class Beadnet {
 			.style('stroke-width', opt.nodes.strokeWidth);
 
 		nodeParent.append('circle')
+			.attr('class', 'node-circle-onchain')
+			.attr('fill', '#666')
+			.attr('r', opt.nodes.radius * 0.4)
+			.attr('cx', '30px')
+			.attr('cy', '-30px')
+			.style('stroke-width', 0)
+			.style('cursor', 'pointer');
+
+		nodeParent.append('text')
+			.style('stroke-width', 0.5)
+			.attr('class', 'node-text-balance')
+			.attr('stroke', opt.container.backgroundColor)
+			.attr('fill', opt.container.backgroundColor)
+			.attr('font-family', 'bitcoinregular')
+			.attr('font-size', '12px')
+			.attr('text-anchor', 'middle')
+			.attr('pointer-events', 'none')
+			.attr('x', '30px')
+			.attr('y', '-30px')
+			.text((d) => '\u0e3f ' + d.balance);
+
+		nodeParent.append('circle')
 			.attr('class', 'node-circle')
 			.attr('fill', (data) => data.color)
 			.attr('r', opt.nodes.radius)
+			.style('stroke-width', 0)
 			.style('cursor', 'pointer');
 
 		nodeParent.append('text')
@@ -327,7 +354,7 @@ class Beadnet {
 
 		nodeParent.append('text')
 			.style('stroke-width', 0.5)
-			.attr('class', 'node-text-balance')
+			.attr('class', 'node-text-offchain-balance')
 			.attr('stroke', opt.container.backgroundColor)
 			.attr('fill', opt.container.backgroundColor)
 			.attr('font-family', 'sans-serif')
@@ -335,15 +362,19 @@ class Beadnet {
 			.attr('y', '15px')
 			.attr('text-anchor', 'middle')
 			.attr('pointer-events', 'none')
-			.text((d) => d.balance);
+			.text((d) => '\u26A1 ' + d.offchainBalance);
 
 		nodeParent.call(this.behaviors.drag);
 
 		/* update existing nodes */
 		this._nodeElements
+			.attr('offchain-balance', (d) => d.offchainBalance)
+			.selectAll('.node-text-offchain-balance')
+			.text((d) => '\u26A1 ' + d.offchainBalance);
+		this._nodeElements
 			.attr('balance', (d) => d.balance)
 			.selectAll('.node-text-balance')
-			.text((d) => d.balance);
+			.text((d) => '\u0e3f ' + d.balance);
 
 		this.simulation
 			.nodes(this._nodes)
@@ -368,6 +399,7 @@ class Beadnet {
 		/* initialize with default values */
 		node.id = node.id || getName();
 		node.balance = node.balance || getRandomNumber(100);
+		node.offchainBalance = node.offchainBalance || 0;
 		node.color = this._opt.colorScheme(this._nodes.length % 20 + 1);
 		//node.color = d3.scaleOrdinal(d3.schemeCategory20)(this._nodes.length % 20 + 1)
 
@@ -387,6 +419,17 @@ class Beadnet {
 	 */
 	addNodes(nodes) {
 		nodes.forEach((node) => this.addNode(node));
+
+		/* make this function chainable */
+		return this;
+	}
+
+	updateNode(nodeId, props) {
+		const node = this._getNodeById(nodeId);
+		if (node) {
+			Objects.assign(node, props);
+			this._updateNodes();
+		}
 
 		/* make this function chainable */
 		return this;
@@ -422,7 +465,8 @@ class Beadnet {
 		return Array.from(new Array(count), (x) => {
 			return {
 				id: getName(),
-				balance: getRandomNumber(100)
+				balance: getRandomNumber(100),
+				offchainBalance: 0
 			};
 		});
 	}
@@ -646,7 +690,9 @@ class Beadnet {
 
 		/* update balance of the source and target nodes */
 		source.balance -= channel.sourceBalance;
+		source.offchainBalance += channel.sourceBalance;
 		target.balance -= channel.targetBalance;
+		target.offchainBalance += channel.targetBalance;
 		this._updateNodes();
 
 		/* update the internal channel list */
@@ -742,8 +788,10 @@ class Beadnet {
 			} else {
 				let sourceNode = this._getNodeById(sourceId);
 				sourceNode.balance += channel.sourceBalance;
+				sourceNode.offchainBalance -= channel.sourceBalance;
 				let targetNode = this._getNodeById(targetId);
 				targetNode.balance += channel.targetBalance;
+				targetNode.offchainBalance -= channel.targetBalance;
 				return false;
 			}
 		});
@@ -770,7 +818,7 @@ class Beadnet {
 	}
 
 	/**
-	 * Transfer a amount from the source node banlance to or from the channel.
+	 * Transfer a amount from the source node balance to or from the channel.
 	 *
 	 * @param {String} sourceId - source node id
 	 * @param {String} targetId - target node id
@@ -797,6 +845,7 @@ class Beadnet {
 				return this;
 			}
 			node.balance -= amount;
+			node.offchainBalance += amount;
 			channel.sourceBalance += amount;
 		} else {
 			amount = Math.abs(amount);
@@ -806,6 +855,7 @@ class Beadnet {
 				return this;
 			}
 			node.balance += amount;
+			node.offchainBalance -= amount;
 			channel.sourceBalance -= amount;
 		}
 
@@ -843,6 +893,7 @@ class Beadnet {
 				return this;
 			}
 			node.balance -= amount;
+			node.offchainBalance += amount;
 			channel.targetBalance += amount;
 		} else {
 			amount = Math.abs(amount);
@@ -852,6 +903,7 @@ class Beadnet {
 				return this;
 			}
 			node.balance += amount;
+			node.offchainBalance -= amount;
 			channel.targetBalance -= amount;
 		}
 
@@ -1015,8 +1067,11 @@ class Beadnet {
 						d.state = 1;
 
 						channel.sourceBalance = sourceBalance;
+						channel.source.offchainBalance--;
 						channel.targetBalance = targetBalance;
+						channel.target.offchainBalance++;
 						that._updateChannels();
+						that._updateNodes();
 
 						channelElement
 							.attr('source-balance', sourceBalance)
@@ -1054,8 +1109,11 @@ class Beadnet {
 						d.state = 0;
 
 						channel.sourceBalance = sourceBalance;
+						channel.source.offchainBalance++;
 						channel.targetBalance = targetBalance;
+						channel.target.offchainBalance--;
 						that._updateChannels();
+						that._updateNodes();
 
 						channelElement
 							.attr('source-balance', sourceBalance)
