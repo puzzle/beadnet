@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "datasets-unisex-first-names-en": "^1.1.0",
-    "extend": "^3.0.1",
+    "extend": "^3.0.2",
     "loglevel": "^1.6.1"
   },
   "peerDependencies": {
